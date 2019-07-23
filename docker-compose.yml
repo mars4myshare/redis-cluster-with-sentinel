@@ -20,7 +20,7 @@ sentinel:
   build: sentinel
   environment:
     - SENTINEL_DOWN_AFTER=5000
-    - SENTINEL_FAILOVER=10000
+    - SENTINEL_FAILOVER=5000
     - MONITOR_PORT=36379
     - PORT=26379
 

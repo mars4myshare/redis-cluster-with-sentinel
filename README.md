@@ -1,5 +1,5 @@
 # redis-cluster-with-sentinel
-**Redis cluster with Docker Compose** 
+**Redis cluster with Docker Compose**
 
 There are following services in the cluster,
 
@@ -11,7 +11,7 @@ There are following services in the cluster,
 The sentinels are configured with a "mymaster" instance with the following properties -
 
 ```
-sentinel monitor mymaster redis-master 6379 2
+sentinel monitor mymaster redis-master <port> 2
 sentinel down-after-milliseconds mymaster 5000
 sentinel parallel-syncs mymaster 1
 sentinel failover-timeout mymaster 5000
@@ -31,19 +31,20 @@ The default values of the environment variables for Sentinel are as following
 
 Build and start services
 ```
-docker-compose up --build
+docker-compose -p e2e -f ./demo/e2e.yml up --build
+docker-compose -p local -f ./demo/local.yml up --build
 ```
 Check the status of redis cluster
 ```
-docker-compose ps
+docker-compose f ./demo/e2e.yml -p e2e ps
 ```
-The result is 
+The result is
 ```
-               Name                              Command               State    Ports   
+               Name                              Command               State    Ports
 ---------------------------------------------------------------------------------------
-redisclusterwithsentinel_master_1     docker-entrypoint.sh redis ...   Up      6379/tcp 
-redisclusterwithsentinel_sentinel_1   entrypoint.sh                    Up      6379/tcp 
-redisclusterwithsentinel_slave_1      docker-entrypoint.sh redis ...   Up      6379/tcp 
+redisclusterwithsentinel_master_1     docker-entrypoint.sh redis ...   Up      6379/tcp
+redisclusterwithsentinel_sentinel_1   entrypoint.sh                    Up      6379/tcp
+redisclusterwithsentinel_slave_1      docker-entrypoint.sh redis ...   Up      6379/tcp
 ```
 
 Scale out the instance number of sentinel
@@ -64,19 +65,19 @@ Check the status of redis cluster
 docker-compose ps
 ```
 
-The result is 
+The result is
 
 ```
-               Name                              Command               State    Ports   
+               Name                              Command               State    Ports
 ---------------------------------------------------------------------------------------
-redisclusterwithsentinel_master_1     docker-entrypoint.sh redis ...   Up      6379/tcp 
-redisclusterwithsentinel_sentinel_1   entrypoint.sh                    Up      6379/tcp 
-redisclusterwithsentinel_sentinel_2   entrypoint.sh                    Up      6379/tcp 
-redisclusterwithsentinel_sentinel_3   entrypoint.sh                    Up      6379/tcp 
-redisclusterwithsentinel_slave_1      docker-entrypoint.sh redis ...   Up      6379/tcp 
-redisclusterwithsentinel_slave_2      docker-entrypoint.sh redis ...   Up      6379/tcp 
-redisclusterwithsentinel_slave_3      docker-entrypoint.sh redis ...   Up      6379/tcp 
-redisclusterwithsentinel_slave_4      docker-entrypoint.sh redis ...   Up      6379/tcp 
+redisclusterwithsentinel_master_1     docker-entrypoint.sh redis ...   Up      6379/tcp
+redisclusterwithsentinel_sentinel_1   entrypoint.sh                    Up      6379/tcp
+redisclusterwithsentinel_sentinel_2   entrypoint.sh                    Up      6379/tcp
+redisclusterwithsentinel_sentinel_3   entrypoint.sh                    Up      6379/tcp
+redisclusterwithsentinel_slave_1      docker-entrypoint.sh redis ...   Up      6379/tcp
+redisclusterwithsentinel_slave_2      docker-entrypoint.sh redis ...   Up      6379/tcp
+redisclusterwithsentinel_slave_3      docker-entrypoint.sh redis ...   Up      6379/tcp
+redisclusterwithsentinel_slave_4      docker-entrypoint.sh redis ...   Up      6379/tcp
 ```
 
 For stop master redis server.
@@ -104,4 +105,3 @@ docker-compose exec sentinel redis-cli -p 26379 SENTINEL get-master-addr-by-name
 ## Contributors
 
 * Mustafa Ileri (<mi@mustafaileri.com>)
-
