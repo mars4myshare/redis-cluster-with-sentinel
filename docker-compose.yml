@@ -1,15 +1,27 @@
 master:
-  image: redis:3
+  image: redis
+  ports:
+    - "36379:36379"
+  expose:
+    - "36379"
+  command: redis-server --port 36379
+  volumes:
+      - ./data:/data
 slave:
-  image: redis:3
-  command: redis-server --slaveof redis-master 6379
+  image: redis
+  command: redis-server --slaveof redis-master 36379 --port 36378
   links:
     - master:redis-master
+  expose:
+    - "36378"
+  ports:
+    - "36378:36378"
 sentinel:
   build: sentinel
   environment:
     - SENTINEL_DOWN_AFTER=5000
     - SENTINEL_FAILOVER=5000
-  links:
-    - master:redis-master
-    - slave
+    - MONITOR_PORT=36379
+
+  ports:
+    - "26379:26379"
