@@ -6,7 +6,7 @@ master:
     - "36379"
   command: redis-server --port 36379
   volumes:
-      - ./data:/data
+      - ./data-e2e:/data
 slave:
   image: redis
   command: redis-server --slaveof redis-master 36379 --port 36378
@@ -20,8 +20,9 @@ sentinel:
   build: sentinel
   environment:
     - SENTINEL_DOWN_AFTER=5000
-    - SENTINEL_FAILOVER=5000
+    - SENTINEL_FAILOVER=10000
     - MONITOR_PORT=36379
+    - PORT=26379
 
   ports:
     - "26379:26379"
